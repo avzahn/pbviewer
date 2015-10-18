@@ -35,4 +35,5 @@ while True:
 		s.sockets[45481].send(cmd)
 		s.sockets[45481].flush()
 		rsp = s.sockets[45481].recv(s.buffsize)
+		print rsp
 		

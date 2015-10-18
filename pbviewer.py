@@ -20,7 +20,7 @@ class socket_array(object):
 		for port in self.sockets:
 			self.sockets[port].close()
 	
-	def print(self):
+	def display(self):
 		
 		for port in self.sockets:
 			
@@ -34,5 +34,5 @@ with socket_array(45481,45482,45484) as s:
 		
 		cmd = raw_input("GCP> ")
 		s.sockets[45481].send(cmd)
-		s.print()
+		s.display()
 		

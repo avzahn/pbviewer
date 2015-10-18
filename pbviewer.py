@@ -1,13 +1,38 @@
 import socket
 from contextlib import closing
 
-with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
-	s.connect(('localhost',45481))
+class socket_array(object):
+	def __init__(self,*ports):
+		
+		self.buffsize = 2**16
+		self.sockets = {}
+		
+		for port in ports:
+			
+			s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			s.connect(('localhost',port))
+			self.sockets[port] = s
+			
+	def __enter__(self):
+		return self
+		
+	def __exit__(self,*args):
+		for port in self.sockets:
+			self.sockets[port].close()
+	
+	def print(self):
+		
+		for port in self.sockets:
+			
+			print " ***** %i ***** " % (port)
+			rsp = self.sockets[port].recv(self.buffsize)
+			print rsp
+			
+with socket_array(45481,45482,45484) as s:
 	
 	while True:
 		
-		cmd = raw_input("GCP>")
-		s.send(cmd)
-		rsp = s.recv(2048)
-		print rsp
+		cmd = raw_input("GCP> ")
+		s.sockets[45481].send(cmd)
+		s.print()
 		

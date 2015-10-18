@@ -6,7 +6,7 @@ with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
 	
 	while True:
 		
-		cmd = input("GCP>")
+		cmd = raw_input("GCP>")
 		s.send(cmd)
 		rsp = s.recv(2048)
 		print rsp

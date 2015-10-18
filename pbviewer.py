@@ -27,12 +27,12 @@ class socket_array(object):
 			print " ***** %i ***** " % (port)
 			rsp = self.sockets[port].recv(self.buffsize)
 			print rsp
-			
-with socket_array(45481,45482,45484) as s:
-	
-	while True:
-		
+
+while True:
+
+	with socket_array(45481,45482,45484) as s:		
 		cmd = raw_input("GCP> ")
 		s.sockets[45481].send(cmd)
-		s.display()
+		s.sockets[45481].flush()
+		rsp = s.sockets[45481].recv(s.buffsize)
 		

@@ -11,6 +11,7 @@ class ControlClient(object):
 		self.port = port
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.socket.connect((host,port))
+		print>>sys.stderr, self.socket.recv(self.buffsize)
 		
 	def __enter__(self):
 		return self

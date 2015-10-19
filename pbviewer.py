@@ -1,39 +1,38 @@
 #! /bin/python27
 import socket
-from contextlib import closing
+import struct
+import sys
 
-class socket_array(object):
-	def __init__(self,*ports):
-		
+class ControlClient(object):
+	
+	def __init__(self,host,port):
 		self.buffsize = 2**16
-		self.sockets = {}
+		self.host = host
+		self.port = port
+		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		self.socket.connect((host,port))
 		
-		for port in ports:
-			
-			s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-			s.connect(('localhost',port))
-			self.sockets[port] = s
-			
 	def __enter__(self):
 		return self
 		
 	def __exit__(self,*args):
-		for port in self.sockets:
-			self.sockets[port].close()
-	
-	def display(self):
+		self.socket.close()
 		
-		for port in self.sockets:
+	def __call__(self,msg):
+		try:
+			self.socket.send(self.pack(msg))
+			return self.socket.recv(self.buffsize)
+		except:
+			print>>sys.stderr, "Connection failed; attempting reconnect"
+			self.socket.close()
+			self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			self.socket.connect((self.host,self.port))
 			
-			print " ***** %i ***** \n\n" % (port)
-			rsp = self.sockets[port].recv(self.buffsize)
-			print rsp
-			print "\n\n"
+	def pack(self,msg):
+		l=len(msg)
+		return struct.pack('!6H%ic'%l,0,l+12,0,0,0,l,*list(msg))
 
-while True:
+with ControlClient('localhost',45481) as ctl:
+	while True:
+		print ctl(raw_input("GCP> "))
 
-	with socket_array(45481,45482,45484) as s:		
-		cmd = raw_input("GCP> ") + "\n"
-		s.sockets[45481].send(cmd)
-		s.display()
-		

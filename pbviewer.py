@@ -1,3 +1,4 @@
+#! /bin/python27
 import socket
 from contextlib import closing
 
@@ -24,15 +25,15 @@ class socket_array(object):
 		
 		for port in self.sockets:
 			
-			print " ***** %i ***** " % (port)
+			print " ***** %i ***** \n\n" % (port)
 			rsp = self.sockets[port].recv(self.buffsize)
 			print rsp
+			print "\n\n"
 
 while True:
 
 	with socket_array(45481,45482,45484) as s:		
 		cmd = raw_input("GCP> ") + "\n"
 		s.sockets[45481].send(cmd)
-		rsp = s.sockets[45481].recv(s.buffsize)
-		print rsp
+		s.display()
 		

@@ -11,7 +11,8 @@ class ControlClient(object):
 		self.port = port
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.socket.connect((host,port))
-		print>>sys.stderr, self.socket.recv(self.buffsize)
+		
+		self.socket.recv(self.buffsize)
 		
 	def __enter__(self):
 		return self
@@ -55,7 +56,7 @@ class ControlClient(object):
 		how this response header works, but there seems to be
 		little harm in ignoring it
 		"""
-		return rsp[0:11],rsp[11:]
+		return rsp[0:12],rsp[12:]
 		
 if __name__ == "__main__":
 	

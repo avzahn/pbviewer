@@ -56,7 +56,7 @@ class ControlClient(object):
 		how this response header works, but there seems to be
 		little harm in ignoring it
 		"""
-		return rsp[0:12],rsp[12:]
+		return rsp[0:14],rsp[14:]
 		
 if __name__ == "__main__":
 	
